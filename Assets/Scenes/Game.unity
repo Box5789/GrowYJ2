@@ -516,7 +516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 559842053}
   m_Layer: 0
-  m_Name: CreateEventPosition
+  m_Name: EventSpawnPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1503,7 +1503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawnPosition: {fileID: 559842053}
-  MoveSpeed: 2
+  MoveSpeed: 4
   TimeStop: 0
 --- !u!4 &1794493274
 Transform:

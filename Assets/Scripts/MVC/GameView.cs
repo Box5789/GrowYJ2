@@ -9,12 +9,7 @@ public class GameView : MonoBehaviour
     [SerializeField] GameObject InteractionPanel;
     [SerializeField] TMP_Text Question_txt, Answer1_txt, Answer2_txt;
     [SerializeField] Button Answer1_btn, Answer2_btn;
-    
 
-    public void 이벤트셋팅()
-    {
-        //이벤트에 함수 달기
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +38,7 @@ public class GameView : MonoBehaviour
             GameController.Instance.InteractionViewResult(Event_occured.result1_knowledge, 
                 Event_occured.result1_strength, Event_occured.result1_mental, 
                 Event_occured.result1_charm);
+            Answer1_btn.onClick.RemoveAllListeners();
         });
         Answer2_btn.onClick.AddListener(delegate
         {
@@ -50,8 +46,11 @@ public class GameView : MonoBehaviour
             GameController.Instance.InteractionViewResult(Event_occured.result2_knowledge,
                 Event_occured.result2_strength, Event_occured.result2_mental,
                 Event_occured.result2_charm);
+            Answer2_btn.onClick.RemoveAllListeners();
         });
     }
+
+
 
     public void OneWayEventView(EventClass Event_occured) 
     { 
