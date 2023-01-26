@@ -53,10 +53,11 @@ public class GameController : MonoBehaviour
 
 
     //변수
-    [SerializeField] GameObject Prefab_Position;
-    GameObject GroundPrefab, BackPrefab, EventPrefab;
+    [SerializeField] Transform SpawnPosition;
+    public float MoveSpeed;
+    GameObject BackPrefab, EventPrefab;
     EventClass NextEvent;
-    bool TimeStop = false;//시간 흐름 제어 변수
+    public bool TimeStop = false;//시간 흐름 제어 변수 -> 추후 이벤트나 액션으로 조정 고려
     float GameTime;//게임 진행 시간 : 분기점 측정 시간(1분)
     float EventTime;//이벤트 발생 간격 시간 : 이벤트 발생 간격 시간(5~8초)
     float tmp_time;//tmp_time : 시간 비교 변수
@@ -67,7 +68,6 @@ public class GameController : MonoBehaviour
     {
         //변수 초기화 : 추후 수정
         GameTime = 0.0f;
-        GroundPrefab = Resources.Load<GameObject>("Prefabs/Ground");
         BackPrefab = Resources.Load<GameObject>("Prefabs/BackGround");
         EventPrefab = Resources.Load<GameObject>("Prefabs/Event");
         SetNewEventData();
@@ -85,7 +85,7 @@ public class GameController : MonoBehaviour
             }
             else if (tmp_time >= EventTime)//이벤트 발생
             {
-                Instantiate(EventPrefab, Prefab_Position.transform).GetComponent<EventObject>().SetEventClass(NextEvent);//오브젝트 풀링으로 관리
+                Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(NextEvent);//오브젝트 풀링으로 관리
                 SetNewEventData();
             }
             else//시간 흐름
@@ -108,13 +108,14 @@ public class GameController : MonoBehaviour
 
     public void InteractinoEventOn(EventClass e)
     {
-        InteractionEvent(e);
         TimeStop = true;
+        InteractionEvent(e);
     }
-    public void InteractionResult(int k, int s, int m, int c)
+    public void InteractionViewResult(int k, int s, int m, int c)
     {
         ChangeStat(k, s, m, c);
     }
+    public void EventOff() { TimeStop = false; }
 
 
     public void OneWayEventOn(EventClass e)

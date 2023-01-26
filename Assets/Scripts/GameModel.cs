@@ -9,7 +9,8 @@ public class GameModel
 
     public GameModel()
     {
-
+        gameData = new GameData();
+        gameData.init();
     }
 
     public void InitDataSet()
@@ -23,5 +24,9 @@ public class GameModel
         gameData.strength += s;
         gameData.mental += m;
         gameData.charm += c;
+
+        Debug.Log("[ Ω∫≈»¡∂¡§ ]\n" + gameData.knowledge.ToString() + " / " + gameData.strength.ToString() + " / " + gameData.mental.ToString() + " / " + gameData.charm.ToString());
+
+        GameController.Instance.EventOff();
     }
 }

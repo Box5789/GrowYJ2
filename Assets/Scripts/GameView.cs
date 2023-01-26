@@ -7,8 +7,9 @@ using UnityEngine.UI;
 public class GameView : MonoBehaviour
 {
     [SerializeField] GameObject InteractionPanel;
-    [SerializeField] TMP_Text Question_txt;
+    [SerializeField] TMP_Text Question_txt, Answer1_txt, Answer2_txt;
     [SerializeField] Button Answer1_btn, Answer2_btn;
+    
 
     public void 이벤트셋팅()
     {
@@ -32,19 +33,21 @@ public class GameView : MonoBehaviour
         //View Setting
         InteractionPanel.SetActive(true);
         Question_txt.text = Event_occured.question;
-        Answer1_btn.GetComponent<TMP_Text>().text = Event_occured.answer1;
-        Answer2_btn.GetComponent<TMP_Text>().text = Event_occured.answer2;
+        Answer1_txt.text = Event_occured.answer1;
+        Answer2_txt.text = Event_occured.answer2;
 
         //on Click Setting
         Answer1_btn.onClick.AddListener(delegate
         {
-            GameController.Instance.InteractionResult(Event_occured.result1_knowledge, 
+            InteractionPanel.SetActive(false);
+            GameController.Instance.InteractionViewResult(Event_occured.result1_knowledge, 
                 Event_occured.result1_strength, Event_occured.result1_mental, 
                 Event_occured.result1_charm);
         });
         Answer2_btn.onClick.AddListener(delegate
         {
-            GameController.Instance.InteractionResult(Event_occured.result2_knowledge,
+            InteractionPanel.SetActive(false);
+            GameController.Instance.InteractionViewResult(Event_occured.result2_knowledge,
                 Event_occured.result2_strength, Event_occured.result2_mental,
                 Event_occured.result2_charm);
         });
