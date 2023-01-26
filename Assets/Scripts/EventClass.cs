@@ -1,10 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class EventClass
 {
+    public string EventID;
     public string roadID;
 
     public string select_type;
@@ -29,6 +31,7 @@ public class EventClass
 
     public EventClass(string[] info)
     {
+        EventID = info[0];
         roadID = info[1];
 
         select_type = info[2];

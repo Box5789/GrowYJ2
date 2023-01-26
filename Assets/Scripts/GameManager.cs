@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -13,8 +12,8 @@ public class GameManager : MonoBehaviour
     //DataSheet
     //Dictionary<string, InteractionEventData> InteractionData = new Dictionary<string, InteractionEventData>();
     //Dictionary<string, OneSideEventData> OneSideData = new Dictionary<string, OneSideEventData>();
-    Dictionary<string, EventClass> EventData = new Dictionary<string, EventClass>(); 
-    Dictionary<string, RoadEventData> RoadData = new Dictionary<string, RoadEventData>();
+    public static List<EventClass> EventData = new List<EventClass>();
+    public static Dictionary<string, RoadEventData> RoadData = new Dictionary<string, RoadEventData>();
 
 
 
@@ -86,9 +85,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                var data_values = data_String.Split('/');
-
-                EventData.Add(data_values[0], new EventClass(data_values));
+                EventData.Add(new EventClass(data_String.Split('/')));
             }
         }
     }

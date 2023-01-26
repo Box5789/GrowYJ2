@@ -4,16 +4,56 @@ using UnityEngine;
 
 public class GameData
 {
-    int 지식;
-    int 체력;
-    int 정신력;
-    int 인기도;
+    public int knowledge 
+    {
+        get
+        {
+            return knowledge;
+        }
+        set 
+        {
+            knowledge = value;
+        } 
+    }
+    public int strength
+    {
+        get
+        {
+            return strength;
+        }
+        set
+        {
+            strength = value;
+        }
+    }
+    public int mental
+    {
+        get
+        {
+            return mental;
+        }
+        set
+        {
+            mental = value;
+        }
+    }
+    public int charm
+    {
+        get
+        {
+            return charm;
+        }
+        set
+        {
+            charm = value;
+        }
+    }
 
     void init()
     {
-        지식 = 50;
-        체력 = 50;
-        정신력 = 50;
-        인기도 = 50;
+        knowledge = 50;
+        strength = 50;
+        mental = 50;
+        charm = 50;
     }
 }

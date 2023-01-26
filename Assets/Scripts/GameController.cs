@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.Examples;
+using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using static GameController;
 
@@ -8,74 +11,116 @@ public class GameController : MonoBehaviour
     GameModel model;
     GameView view;
 
+
+    public delegate void EventFunc(EventClass e);
+    public delegate void ChangeStatFunc(int k, int s, int m, int c);
+    public static event ChangeStatFunc ChangeStat;
+    public static event EventFunc InteractionEvent;
+    public static event EventFunc OneWayEvent;
+
+
+    //Singleton
+    private static GameController _intstance;
+    public static GameController Instance { get { return _intstance; } }
+
+
     private void Awake()
     {
+        //Singleton
+        if (_intstance == null)
+            _intstance = this;
+        else if (_intstance != this)
+            Destroy(this.gameObject);
+
+        //MVC
         model = new GameModel();
         view = gameObject.GetComponent<GameView>();
 
+        //Connect Event
+        InteractionEvent += view.InteractionEvenView;
+        OneWayEvent += view.OneWayEventView;//나중에 Action으로 수정
+        ChangeStat += model.ChangeStat;
+
+
+
         //데이터 읽어오기 : 나중
+        //초기 데이터 셋팅
     }
 
-
-    //이벤트
-    public delegate void 이벤트();
-    public static event 이벤트 이벤트발생;
-    public static event 이벤트 분기점발생;
-
-    float 이벤트발생시간, tmp_time;//이벤트발생시간 : 이벤트 발생 간격 시간(5~8초), tmp_time : 시간 비교 변수
-    bool 이벤트발생여부 = false;
+    //Not yet
+    public delegate void VoidFunc();
+    public static event VoidFunc SelectRoad;
 
 
-    //분기점
-    float 분기점시간;//분기점시간 : 분기점 측정 시간(1분)
-    
+    //변수
+    [SerializeField] GameObject Prefab_Position;
+    GameObject GroundPrefab, BackPrefab, EventPrefab;
+    EventClass NextEvent;
+    bool TimeStop = false;//시간 흐름 제어 변수
+    float GameTime;//게임 진행 시간 : 분기점 측정 시간(1분)
+    float EventTime;//이벤트 발생 간격 시간 : 이벤트 발생 간격 시간(5~8초)
+    float tmp_time;//tmp_time : 시간 비교 변수
+
 
     // Start is called before the first frame update
     void Start()
     {
-        model.초기데이터셋팅();
-
+        //변수 초기화 : 추후 수정
+        GameTime = 0.0f;
+        GroundPrefab = Resources.Load<GameObject>("Prefabs/Ground");
+        BackPrefab = Resources.Load<GameObject>("Prefabs/BackGround");
+        EventPrefab = Resources.Load<GameObject>("Prefabs/Event");
+        SetNewEventData();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!이벤트발생여부)
+        if (!TimeStop)
         {
-            if (분기점시간 >= 60.0f)//분기점 체크
+            if (GameTime >= 60.0f)//분기점 체크
             {
-                분기점발생();
-                이벤트발생여부 = true;
+                SelectRoad();
+                TimeStop = true;
             }
-            else if (이벤트발생시간 <= 0.0f)
+            else if (tmp_time >= EventTime)//이벤트 발생
             {
-                이벤트변수초기화();
+                Instantiate(EventPrefab, Prefab_Position.transform).GetComponent<EventObject>().SetEventClass(NextEvent);//오브젝트 풀링으로 관리
+                SetNewEventData();
             }
-            else if (tmp_time >= 이벤트발생시간)
+            else//시간 흐름
             {
-                이벤트발생();
-                이벤트발생여부 = true;
-
-                //나중에 꼭 지우기
-                이벤트변수초기화();
-            }
-            else
-            {
-                //시간지남 = 영준이 걸어감
                 tmp_time += Time.deltaTime;
-                분기점시간 += Time.deltaTime;
+                GameTime += Time.deltaTime;
             }
         }
-        
     }
 
-    void 이벤트변수초기화()
+    public void SetNewEventData()
     {
-        //이벤트 변수 초기화
-        이벤트발생시간 = Random.Range(5.0f, 8.0f);
+        EventTime = Random.Range(5.0f, 8.0f);
+        NextEvent = GameManager.EventData[Random.Range(0, GameManager.EventData.Count)];
         tmp_time = 0.0f;
-        이벤트발생여부 = false;
+        TimeStop = false;
+    }
 
-        //Debug.Log("이벤트변수 초기화\n다음 이벤트 발생 간격 : " + 이벤트발생시간.ToString());
+
+
+    public void InteractinoEventOn(EventClass e)
+    {
+        InteractionEvent(e);
+        TimeStop = true;
+    }
+    public void InteractionResult(int k, int s, int m, int c)
+    {
+        ChangeStat(k, s, m, c);
+    }
+
+
+    public void OneWayEventOn(EventClass e)
+    {
+        ChangeStat(e.result1_knowledge, e.result1_strength,
+                        e.result1_mental, e.result1_charm);
+        OneWayEvent(e);
     }
 }
