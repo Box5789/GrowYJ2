@@ -43,20 +43,29 @@ public class RoadEventData
         bool[] check = new bool[4] { false, false, false, false };
         int[] stat = new int[4] { game.knowledge, game.strength, game.mental, game.charm };
         string[] criterion = new string[4] { knowledge, strength, mental, charm };
+        string[] criterion_num = new string[2];
 
-        for(int i=0; i < stat.Length; i++)
+        for (int i=0; i < stat.Length; i++)
         {
-            if (criterion[i] == null)
+            if (criterion[i] == null)//No Condition
                 check[i] = true;
-            else if (criterion[i].IndexOf("<") == 0)
-                if(stat[i] <= int.Parse(criterion[i].Split("<")[0]))
+            else if (criterion[i].IndexOf("<") == 0)//More than
+            {
+                if (int.Parse(criterion[i].Substring(1, criterion[i].Length - 1)) <= stat[i])
                     check[i] = true;
-            else if(criterion[i].IndexOf("<") == criterion[i].Length - 1)
-                if (stat[i] <= int.Parse(criterion[i].Split("<")[0]))
-                    check[i] = true;
+            }
             else
-                if(int.Parse(criterion[i].Split("<")[0]) <= stat[i] && stat[i] <= int.Parse(criterion[i].Split("<")[1]))
+            {
+                criterion_num = criterion[i].Split("<");
+
+                if (criterion[i].IndexOf("<") == criterion[i].Length - 1)//Less than
+                {
+                    if (stat[i] <= int.Parse(criterion_num[0]))
+                        check[i] = true;
+                }
+                else if (int.Parse(criterion_num[0]) <= stat[i] && stat[i] <= int.Parse(criterion_num[1]))//More & Less
                     check[i] = true;
+            }
         }
 
         for (int i = 0; i < 4; i++)

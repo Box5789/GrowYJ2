@@ -10,7 +10,7 @@ public class GameView : MonoBehaviour
     [SerializeField] GameObject InteractionPanel, IntersectionPanel, IntersectionContent;
     [SerializeField] TMP_Text Question_txt, Answer1_txt, Answer2_txt;
     [SerializeField] Button Answer1_btn, Answer2_btn;
-    Button Option_btn;
+
 
     [Header("게임 조정 변수들")]
     //BackGround
@@ -31,7 +31,6 @@ public class GameView : MonoBehaviour
     void Start()
     {
         //Prefab
-        Option_btn = Resources.Load<Button>("Prefabs/Option_btn");
         EventPrefab = Resources.Load<GameObject>("Prefabs/Event");
         GameObject[] background_prefabs = Resources.LoadAll<GameObject>("BackGround");
 
@@ -132,26 +131,35 @@ public class GameView : MonoBehaviour
         //ViewSetting
         IntersectionPanel.SetActive(true);
         //Option Button
-        for (int i=0; i < GameManager.RoadData[gameData.road_ID].NextRoad.Length; i++)
+        for (int i=0; i < 3; i++)
         {
-            index = GameManager.RoadData[gameData.road_ID].NextRoad[i];
-            option_btn = Instantiate(Option_btn, IntersectionContent.transform);
+            option_btn = IntersectionContent.transform.GetChild(i).GetComponent<Button>();
 
-            if (GameManager.RoadData[index].CheckRoad(gameData))
+            if (i < GameManager.RoadData[gameData.road_ID].NextRoad.Length)
             {
-                option_btn.onClick.AddListener(delegate
+                option_btn.gameObject.SetActive(true);
+                index = GameManager.RoadData[gameData.road_ID].NextRoad[i];
+
+                if (GameManager.RoadData[index].CheckRoad(gameData))
                 {
-                    IntersectionPanel.SetActive(false);
-                    GameController.IntersectionViewResult(index);
-                    option_btn.onClick.RemoveAllListeners();
-                });
+                    option_btn.onClick.AddListener(delegate
+                    {
+                        IntersectionPanel.SetActive(false);
+                        GameController.IntersectionViewResult(index);
+                        option_btn.onClick.RemoveAllListeners();
+                    });
+                }
+                else
+                {
+                    //버튼 이미지 잠금 코드 or 버튼 클릭 못하게
+                    option_btn.GetComponentInChildren<TMP_Text>().text += " 잠김";
+                }
+                option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
             }
             else
             {
-                //버튼 이미지 잠금 코드 or 버튼 클릭 못하게
-                option_btn.GetComponentInChildren<TMP_Text>().text += " 잠김";
+                option_btn.gameObject.SetActive(false);
             }
-            option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
         }
 
     }
