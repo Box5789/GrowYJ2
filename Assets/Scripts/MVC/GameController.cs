@@ -150,7 +150,6 @@ public class GameController : MonoBehaviour
     {
         ChangeRoad(roadID);
     }
-
     void NewRoadResult(string id)
     {
         TimeStop = false;
@@ -158,4 +157,6 @@ public class GameController : MonoBehaviour
 
         InitGame();
     }
+
+
 }

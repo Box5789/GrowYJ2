@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameView : MonoBehaviour
@@ -139,14 +141,19 @@ public class GameView : MonoBehaviour
             {
                 option_btn.gameObject.SetActive(true);
                 index = GameManager.RoadData[gameData.road_ID].NextRoad[i];
+                option_btn.onClick.RemoveAllListeners();
 
                 if (GameManager.RoadData[index].CheckRoad(gameData))
                 {
+                    
                     option_btn.onClick.AddListener(delegate
                     {
                         IntersectionPanel.SetActive(false);
-                        GameController.IntersectionViewResult(index);
-                        option_btn.onClick.RemoveAllListeners();
+                        Debug.Log(GameManager.RoadData[index].NextRoad[0]);
+                        if (GameManager.RoadData[index].NextRoad[0].Equals(""))
+                            SceneManager.LoadScene("Home");
+                        else
+                            GameController.IntersectionViewResult(index);
                     });
                 }
                 else
