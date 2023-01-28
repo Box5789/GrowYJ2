@@ -5,12 +5,13 @@ using UnityEngine.Playables;
 
 public class GameModel
 {
-    GameData gameData;
+    private GameData _gameData;
+    public GameData gameData { get { return _gameData; } }
 
     public GameModel()
     {
-        gameData = new GameData();
-        gameData.init();
+        _gameData = new GameData();
+        _gameData.init();
     }
 
     public void InitDataSet()
@@ -29,4 +30,6 @@ public class GameModel
 
         GameController.Instance.EventOff();
     }
+
+    public void ChangeRoad(string id) { gameData.road_ID = id; }
 }

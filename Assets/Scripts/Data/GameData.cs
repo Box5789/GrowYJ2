@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameData
 {
+    public string road_ID;
+
     private int _knowledge;
     public int knowledge
     {
@@ -55,6 +57,7 @@ public class GameData
 
     public void init()
     {
+        road_ID = "n1";
         _knowledge = 50;
         _strength = 50;
         _mental = 50;

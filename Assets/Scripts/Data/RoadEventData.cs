@@ -37,13 +37,37 @@ public class RoadEventData
         //back_image = info[9];
     }
 
-    //조건 확인 함수
-    public bool CheckRoad()
+    //Check Road Condition
+    public bool CheckRoad(GameData game)
     {
-        bool result = false;
+        bool[] check = new bool[4] { false, false, false, false };
+        int[] stat = new int[4] { game.knowledge, game.strength, game.mental, game.charm };
+        string[] criterion = new string[4] { knowledge, strength, mental, charm };
 
-        //조건 확인
+        for(int i=0; i < stat.Length && (!criterion[i].Equals("")); i++)
+        {
+            if (criterion[i].Equals(""))
+                check[i] = true;
+            else if (criterion[i].IndexOf("<") == 0)
+            {
+                if(stat[i] <= int.Parse(criterion[i].Substring(1, 2)))
+                {
+                    check[i] = true;
+                }
+            }
+            else
+            {
+                if (stat[i] <= int.Parse(criterion[i].Substring(0, 2)))
+                {
+                    check[i] = true;
+                }
+            }
+        }
 
-        return result;
+        for (int i = 0; i < 4; i++)
+            if (!check[i])
+                return false;
+
+        return true;
     }
 }
