@@ -49,19 +49,14 @@ public class RoadEventData
             if (criterion[i].Equals(""))
                 check[i] = true;
             else if (criterion[i].IndexOf("<") == 0)
-            {
-                if(stat[i] <= int.Parse(criterion[i].Substring(1, 2)))
-                {
+                if(stat[i] <= int.Parse(criterion[i].Split("<")[0]))
                     check[i] = true;
-                }
-            }
+            else if(criterion[i].IndexOf("<") == criterion[i].Length - 1)
+                if (stat[i] <= int.Parse(criterion[i].Split("<")[0]))
+                    check[i] = true;
             else
-            {
-                if (stat[i] <= int.Parse(criterion[i].Substring(0, 2)))
-                {
+                if(int.Parse(criterion[i].Split("<")[0]) <= stat[i] && stat[i] <= int.Parse(criterion[i].Split("<")[1]))
                     check[i] = true;
-                }
-            }
         }
 
         for (int i = 0; i < 4; i++)

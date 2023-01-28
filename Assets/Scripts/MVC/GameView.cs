@@ -12,6 +12,7 @@ public class GameView : MonoBehaviour
 
     GameObject[] BackGrounds = new GameObject[4];
     GameObject[] Roads = new GameObject[4];
+
     // Start is called before the first frame update
     void Start()
     {
@@ -91,5 +92,6 @@ public class GameView : MonoBehaviour
     public void ChangeRoadView(string id)
     {
         //길이랑 이미지 배경 변경 코드
+
     }
 }
