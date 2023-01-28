@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class EventObject : MonoBehaviour
 {
+    float speed;
     EventClass Data;
     bool click = true, contact = true;
 
-    public void SetEventClass(EventClass d)
+    public void SetEventClass(EventClass d, float s)
     {
+        speed = s;
         Data = d;
         Debug.Log(Data.EventID + " / " + Data.select_type + " / " + Data.conversation_type);
     }
@@ -32,7 +34,7 @@ public class EventObject : MonoBehaviour
     {
         if (!GameController.Instance.TimeStop)
         {
-            transform.Translate(new Vector2(GameController.Instance.MoveSpeed * Time.fixedDeltaTime * -1, transform.position.y));
+            transform.Translate(new Vector2(speed * Time.fixedDeltaTime * -1, transform.position.y));
         }
     }
 

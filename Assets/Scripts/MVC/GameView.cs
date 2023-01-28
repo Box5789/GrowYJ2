@@ -6,28 +6,91 @@ using UnityEngine.UI;
 
 public class GameView : MonoBehaviour
 {
+    //UI
     [SerializeField] GameObject InteractionPanel, IntersectionPanel, IntersectionContent;
     [SerializeField] TMP_Text Question_txt, Answer1_txt, Answer2_txt;
-    [SerializeField] Button Answer1_btn, Answer2_btn, Option_btn;
+    [SerializeField] Button Answer1_btn, Answer2_btn;
+    Button Option_btn;
 
-    GameObject[] BackGrounds = new GameObject[4];
-    GameObject[] Roads = new GameObject[4];
+    [Header("게임 조정 변수들")]
+    //BackGround
+    [SerializeField] float speed;
+    List<GameObject[]> BackGroundPositionGroup = new List<GameObject[]>();
+    float destroyPosX = 0f;
+    float spawnPosX = 0f;
+    int xScreenHalfSize;
+    int road_changed = 0;
+    Sprite[] next_road;
 
-    // Start is called before the first frame update
+    //Event
+    Transform SpawnPosition;
+    GameObject EventPrefab;
+    
+
+
     void Start()
     {
-        Option_btn = Resources.Load<Button>("/Prefabs/Option_btn");
-        //길이랑 배경 프리펩 가져와서 복제하기.
-        //오브젝트 연결
+        //Prefab
+        Option_btn = Resources.Load<Button>("Prefabs/Option_btn");
+        EventPrefab = Resources.Load<GameObject>("Prefabs/Event");
+        GameObject[] background_prefabs = Resources.LoadAll<GameObject>("BackGround");
+
+
+        //Object
+        SpawnPosition = GameObject.Find("EventSpawnPosition").transform;
+
+
+        //BackGround
+        xScreenHalfSize = (int)(Camera.main.orthographicSize * Camera.main.aspect) * 2; //Debug.Log(xScreenHalfSize);//10.5
+
+        for (int i=0; i <  GameObject.Find("BackGroundGroup").transform.childCount; i++)
+        {
+            GameObject[] list = new GameObject[3];
+            for(int j=0; j < list.Length; j++)
+            {
+                list[j] = Instantiate(background_prefabs[i], GameObject.Find("BackGroundGroup").transform.GetChild(i).transform);
+                list[j].transform.position = new Vector3(xScreenHalfSize * j, 0, -i);
+            }
+            BackGroundPositionGroup.Add(list);
+        }
+
+        destroyPosX = -xScreenHalfSize;
+        spawnPosX = xScreenHalfSize * (BackGroundPositionGroup[0].Length - 1);
     }
 
     private void FixedUpdate()
     {
         if (!GameController.Instance.TimeStop)
         {
-            //배경이랑 길 움직임 여기서 조정
+            for(int i = 0; i < BackGroundPositionGroup.Count; i++)
+            {
+                for(int j = 0; j < BackGroundPositionGroup[i].Length; j++)
+                {
+                    BackGroundPositionGroup[i][j].transform.position += new Vector3(-speed, 0, 0) * Time.fixedDeltaTime;
+
+                    if (BackGroundPositionGroup[i][j].transform.position.x < destroyPosX)
+                    {
+                        BackGroundPositionGroup[i][j].transform.position = new Vector3(spawnPosX, 0, -i);
+
+                    }
+                    /* 배경 바꾸기
+                    if (road_changed > 0 && BackGroundPositionGroup[i][j].transform.position.x <= xScreenHalfSize)
+                    {
+                        BackGroundPositionGroup[i][j].GetComponent<SpriteRenderer>().sprite = next_road[i];
+                        road_changed--;
+                    }
+                    */
+                }
+            }
         }
     }
+
+
+    public void NewEventView()
+    {
+        Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(GameController.Instance.NextEvent, speed);//오브젝트 풀링으로 관리
+    }
+
 
     public void InteractionEvenView(EventClass Event_occured)
     {
@@ -64,6 +127,7 @@ public class GameView : MonoBehaviour
     public void IntersectionEventView(GameData gameData)
     {
         string index;
+        Button option_btn;
 
         //ViewSetting
         IntersectionPanel.SetActive(true);
@@ -71,27 +135,31 @@ public class GameView : MonoBehaviour
         for (int i=0; i < GameManager.RoadData[gameData.road_ID].NextRoad.Length; i++)
         {
             index = GameManager.RoadData[gameData.road_ID].NextRoad[i];
-            Option_btn.onClick.RemoveAllListeners();
+            option_btn = Instantiate(Option_btn, IntersectionContent.transform);
 
             if (GameManager.RoadData[index].CheckRoad(gameData))
             {
-                Option_btn.onClick.AddListener(delegate
+                option_btn.onClick.AddListener(delegate
                 {
+                    IntersectionPanel.SetActive(false);
                     GameController.IntersectionViewResult(index);
+                    option_btn.onClick.RemoveAllListeners();
                 });
             }
             else
             {
                 //버튼 이미지 잠금 코드 or 버튼 클릭 못하게
+                option_btn.GetComponentInChildren<TMP_Text>().text += " 잠김";
             }
-            Option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
-            Instantiate(Option_btn, IntersectionContent.transform);
+            option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
         }
 
     }
     public void ChangeRoadView(string id)
     {
-        //길이랑 이미지 배경 변경 코드
+        road_changed = BackGroundPositionGroup[0].Length * BackGroundPositionGroup.Count;
 
+        //나중에 이미지 생기면
+        //next_road = Resources.LoadAll<Sprite>("BackGround/" + id);
     }
 }

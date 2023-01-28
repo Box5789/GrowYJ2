@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour
     public delegate void StrFunc(string str);
 
     public static event VoidFunc InitGame;
+    public static event VoidFunc NewEvent;
     public static event EventFunc InteractionEvent;
     public static event EventFunc OneWayEvent;
     public static event ChangeStatFunc ChangeStat;
@@ -45,14 +46,15 @@ public class GameController : MonoBehaviour
         //Connect Event
         InitGame += SetEventPiece;
         InitGame += SetNewEventData;
+        NewEvent += view.NewEventView;
         InteractionEvent += view.InteractionEvenView;
         OneWayEvent += view.OneWayEventView;//나중에 Action으로 수정
         ChangeStat += model.ChangeStat;
         Intersection += view.IntersectionEventView;
+        ChangeRoad += NewRoadResult;
         ChangeRoad += model.ChangeRoad;
         ChangeRoad += view.ChangeRoadView;
-
-
+        
 
         //데이터 읽어오기 : 나중
         //초기 데이터 셋팅
@@ -62,16 +64,14 @@ public class GameController : MonoBehaviour
     //데이터
     List<EventClass> EventPiece = new List<EventClass>();
 
-
+    [Header("게임 조정 변수들")]
     //변수
-    [SerializeField] Transform SpawnPosition;
-    public float MoveSpeed;
-    GameObject EventPrefab;
-    EventClass NextEvent;
-    public bool TimeStop = false;//시간 흐름 제어 변수 -> 추후 이벤트나 액션으로 조정 고려
+    [HideInInspector] public EventClass NextEvent;
+    [HideInInspector] public bool TimeStop = false;//시간 흐름 제어 변수 -> 추후 이벤트나 액션으로 조정 고려
     float GameTime;//게임 진행 시간 : 분기점 측정 시간(1분)
     float EventTime;//이벤트 발생 간격 시간 : 이벤트 발생 간격 시간(5~8초)
     float tmp_time;//tmp_time : 시간 비교 변수
+    [SerializeField] float IntersectionTime;
 
 
     // Start is called before the first frame update
@@ -79,7 +79,7 @@ public class GameController : MonoBehaviour
     {
         //변수 초기화 : 추후 수정
         GameTime = 0.0f;
-        EventPrefab = Resources.Load<GameObject>("Prefabs/Event");
+        
         InitGame();
     }
 
@@ -88,14 +88,14 @@ public class GameController : MonoBehaviour
     {
         if (!TimeStop)
         {
-            if (GameTime >= 60.0f)//분기점 체크
+            if (GameTime >= IntersectionTime)//분기점 체크
             {
                 Intersection(model.gameData);
                 TimeStop = true;
             }
             else if (tmp_time >= EventTime)//이벤트 발생
             {
-                Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(NextEvent);//오브젝트 풀링으로 관리
+                NewEvent();
                 SetNewEventData();
             }
             else//시간 흐름
@@ -111,7 +111,7 @@ public class GameController : MonoBehaviour
         EventPiece.Clear();
         foreach (EventClass event_piece in GameManager.EventData)
         {
-            if (event_piece.roadID.Equals(model.gameData.road_ID))
+            if (event_piece.roadID.Equals(model.gameData.road_ID) || event_piece.roadID.Equals(""))
             {
                 EventPiece.Add(event_piece);
             }
@@ -141,8 +141,7 @@ public class GameController : MonoBehaviour
 
     public void OneWayEventOn(EventClass e)
     {
-        ChangeStat(e.result1_knowledge, e.result1_strength,
-                        e.result1_mental, e.result1_charm);
+        ChangeStat(e.result1_knowledge, e.result1_strength, e.result1_mental, e.result1_charm);
         OneWayEvent(e);
     }
 
@@ -150,5 +149,13 @@ public class GameController : MonoBehaviour
     public static void IntersectionViewResult(string roadID)
     {
         ChangeRoad(roadID);
+    }
+
+    void NewRoadResult(string id)
+    {
+        TimeStop = false;
+        GameTime = 0.0f;
+
+        InitGame();
     }
 }

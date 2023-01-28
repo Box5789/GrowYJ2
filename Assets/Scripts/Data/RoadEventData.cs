@@ -44,9 +44,9 @@ public class RoadEventData
         int[] stat = new int[4] { game.knowledge, game.strength, game.mental, game.charm };
         string[] criterion = new string[4] { knowledge, strength, mental, charm };
 
-        for(int i=0; i < stat.Length && (!criterion[i].Equals("")); i++)
+        for(int i=0; i < stat.Length; i++)
         {
-            if (criterion[i].Equals(""))
+            if (criterion[i] == null)
                 check[i] = true;
             else if (criterion[i].IndexOf("<") == 0)
                 if(stat[i] <= int.Parse(criterion[i].Split("<")[0]))
