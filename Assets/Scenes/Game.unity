@@ -1515,7 +1515,7 @@ GameObject:
   - component: {fileID: 1161744823}
   - component: {fileID: 1161744822}
   m_Layer: 5
-  m_Name: InteractionEventPanel
+  m_Name: InteractionPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2267,14 +2267,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 636a764655151ca48a91f7cd9fa3e683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InteractionPanel: {fileID: 1161744820}
-  IntersectionPanel: {fileID: 1573994578}
-  IntersectionContent: {fileID: 809455125}
-  Question_txt: {fileID: 1961170803}
-  Answer1_txt: {fileID: 1765098170}
-  Answer2_txt: {fileID: 1686206097}
-  Answer1_btn: {fileID: 457129881}
-  Answer2_btn: {fileID: 1500744098}
   speed: 4
 --- !u!114 &1794493273
 MonoBehaviour:
@@ -2289,7 +2281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeStop: 0
-  IntersectionTime: 5
+  IntersectionTime: 10
 --- !u!4 &1794493274
 Transform:
   m_ObjectHideFlags: 0

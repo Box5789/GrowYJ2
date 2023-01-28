@@ -9,9 +9,9 @@ using UnityEngine.UI;
 public class GameView : MonoBehaviour
 {
     //UI
-    [SerializeField] GameObject InteractionPanel, IntersectionPanel, IntersectionContent;
-    [SerializeField] TMP_Text Question_txt, Answer1_txt, Answer2_txt;
-    [SerializeField] Button Answer1_btn, Answer2_btn;
+    GameObject InteractionPanel, IntersectionPanel, IntersectionContent;
+    TMP_Text Question_txt;
+    Button Answer1_btn, Answer2_btn;
 
 
     [Header("게임 조정 변수들")]
@@ -95,11 +95,17 @@ public class GameView : MonoBehaviour
 
     public void InteractionEvenView(EventClass Event_occured)
     {
+        InteractionPanel = GameObject.Find("Canvas").transform.Find("InteractionPanel").gameObject;
+        Question_txt = InteractionPanel.transform.Find("Q_bg").transform.Find("Question_txt").GetComponent<TMP_Text>();
+        Answer1_btn = InteractionPanel.transform.Find("Answer1_btn").GetComponent<Button>();
+        Answer2_btn = InteractionPanel.transform.Find("Answer2_btn").GetComponent<Button>();
+
+
         //View Setting
         InteractionPanel.SetActive(true);
         Question_txt.text = Event_occured.question;
-        Answer1_txt.text = Event_occured.answer1;
-        Answer2_txt.text = Event_occured.answer2;
+        Answer1_btn.transform.GetComponentInChildren<TMP_Text>().text = Event_occured.answer1;
+        Answer2_btn.transform.GetComponentInChildren<TMP_Text>().text = Event_occured.answer2;
 
         //on Click Setting
         Answer1_btn.onClick.AddListener(delegate
@@ -131,7 +137,10 @@ public class GameView : MonoBehaviour
         Button option_btn;
 
         //ViewSetting
+        IntersectionPanel = GameObject.Find("Canvas").transform.Find("IntersectionPanel").gameObject;
+        IntersectionContent = IntersectionPanel.transform.Find("Content").gameObject;
         IntersectionPanel.SetActive(true);
+
         //Option Button
         for (int i=0; i < 3; i++)
         {
@@ -145,7 +154,6 @@ public class GameView : MonoBehaviour
 
                 if (GameManager.RoadData[index].CheckRoad(gameData))
                 {
-                    
                     option_btn.onClick.AddListener(delegate
                     {
                         IntersectionPanel.SetActive(false);
@@ -155,13 +163,14 @@ public class GameView : MonoBehaviour
                         else
                             GameController.IntersectionViewResult(index);
                     });
+                    option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
                 }
                 else
                 {
-                    //버튼 이미지 잠금 코드 or 버튼 클릭 못하게
-                    option_btn.GetComponentInChildren<TMP_Text>().text += " 잠김";
+                    //버튼 이미지 잠금 코드
+                    option_btn.transform.GetComponentInChildren<TMP_Text>().text += " 잠김";
                 }
-                option_btn.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name;
+
             }
             else
             {
