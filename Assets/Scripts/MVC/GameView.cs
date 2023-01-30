@@ -89,7 +89,8 @@ public class GameView : MonoBehaviour
 
     public void NewEventView()
     {
-        Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(GameController.Instance.NextEvent, speed);//오브젝트 풀링으로 관리
+        //오브젝트 풀링
+        Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(GameController.Instance.NextEvent, speed);
     }
 
 
@@ -142,10 +143,11 @@ public class GameView : MonoBehaviour
         IntersectionPanel.SetActive(true);
 
         //Option Button
-        for (int i=0; i < 3; i++)
+        for (int i=0; i < 3; i++)//Max Option Button Num = 3;
         {
             option_btn = IntersectionContent.transform.GetChild(i).GetComponent<Button>();
 
+            
             if (i < GameManager.RoadData[gameData.road_ID].NextRoad.Length)
             {
                 option_btn.gameObject.SetActive(true);
@@ -157,7 +159,7 @@ public class GameView : MonoBehaviour
                     option_btn.onClick.AddListener(delegate
                     {
                         IntersectionPanel.SetActive(false);
-                        Debug.Log(GameManager.RoadData[index].NextRoad[0]);
+
                         if (GameManager.RoadData[index].NextRoad[0].Equals(""))
                             SceneManager.LoadScene("Home");
                         else
@@ -168,9 +170,8 @@ public class GameView : MonoBehaviour
                 else
                 {
                     //버튼 이미지 잠금 코드
-                    option_btn.transform.GetComponentInChildren<TMP_Text>().text += " 잠김";
+                    option_btn.transform.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name + " 잠김";
                 }
-
             }
             else
             {

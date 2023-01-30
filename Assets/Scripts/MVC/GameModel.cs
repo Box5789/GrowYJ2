@@ -31,5 +31,35 @@ public class GameModel
         GameController.Instance.EventOff();
     }
 
-    public void ChangeRoad(string id) { gameData.road_ID = id; }
+    public void ChangeRoad(string id) 
+    { 
+        gameData.road_ID = id;
+    }
+
+    public void EventSet()
+    {
+        Debug.Log("Road : " + gameData.road_ID + " / " + GameManager.RoadData[gameData.road_ID].Name);
+        GameController.Instance.EventPiece.Clear();
+
+        for (int i = 0; i < GameManager.EventData.Count; i++)
+        {
+            if (GameManager.EventData[i].roadID[0].Equals(""))
+            {
+                Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
+                GameController.Instance.EventPiece.Add(GameManager.EventData[i]);
+            }
+            else
+            {
+                for (int j = 0; j < GameManager.EventData[i].roadID.Length; j++)
+                {
+                    if (GameManager.EventData[i].roadID[j].Equals(gameData.road_ID))
+                    {
+                        Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
+                        GameController.Instance.EventPiece.Add(GameManager.EventData[i]);
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

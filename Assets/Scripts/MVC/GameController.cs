@@ -44,17 +44,17 @@ public class GameController : MonoBehaviour
         view = gameObject.GetComponent<GameView>();
 
         //Connect Event
-        InitGame += SetEventPiece;
+        InitGame += model.EventSet;
         InitGame += SetNewEventData;
         NewEvent += view.NewEventView;
         InteractionEvent += view.InteractionEvenView;
         OneWayEvent += view.OneWayEventView;//나중에 Action으로 수정
         ChangeStat += model.ChangeStat;
         Intersection += view.IntersectionEventView;
-        ChangeRoad += NewRoadResult;
         ChangeRoad += model.ChangeRoad;
         ChangeRoad += view.ChangeRoadView;
-        
+        ChangeRoad += NewRoadResult;
+
 
         //데이터 읽어오기 : 나중
         //초기 데이터 셋팅
@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
 
 
     //데이터
-    List<EventClass> EventPiece = new List<EventClass>();
+    public List<EventClass> EventPiece = new List<EventClass>();
 
     [Header("게임 조정 변수들")]
     //변수
@@ -106,17 +106,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void SetEventPiece()
-    {
-        EventPiece.Clear();
-        foreach (EventClass event_piece in GameManager.EventData)
-        {
-            if (event_piece.roadID.Equals(model.gameData.road_ID) || event_piece.roadID.Equals(""))
-            {
-                EventPiece.Add(event_piece);
-            }
-        }
-    }
     public void SetNewEventData()
     {
         EventTime = Random.Range(5.0f, 8.0f);

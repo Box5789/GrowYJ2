@@ -7,7 +7,7 @@ using UnityEngine;
 public class EventClass
 {
     public string EventID;
-    public string roadID;
+    public string[] roadID;
 
     public string select_type;
     public bool conversation_type;
@@ -32,7 +32,7 @@ public class EventClass
     public EventClass(string[] info)
     {
         EventID = info[0];
-        roadID = info[1];
+        roadID = info[1].Replace(" ","").Split(",");
 
         select_type = info[2];
         conversation_type = Convert.ToBoolean(info[3]);
