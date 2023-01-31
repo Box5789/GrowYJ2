@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
     const string event_filepath = "/Resources/Data/Event.csv";
     const string road_filepath = "/Resources/Data/Road.csv";
     const string save_filename = "GameDataFile.json";
+
+
     //DataSheet
     //Dictionary<string, InteractionEventData> InteractionData = new Dictionary<string, InteractionEventData>();
     //Dictionary<string, OneSideEventData> OneSideData = new Dictionary<string, OneSideEventData>();

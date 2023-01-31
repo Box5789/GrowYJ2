@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     public delegate void StrFunc(string str);
 
     public static event VoidFunc InitGame;
-    public static event VoidFunc NewEvent;
+    public static event EventFunc NewEvent;
     public static event EventFunc InteractionEvent;
     public static event EventFunc OneWayEvent;
     public static event ChangeStatFunc ChangeStat;
@@ -60,10 +60,6 @@ public class GameController : MonoBehaviour
         //초기 데이터 셋팅
     }
 
-
-    //데이터
-    public List<EventClass> EventPiece = new List<EventClass>();
-
     [Header("게임 조정 변수들")]
     //변수
     [HideInInspector] public EventClass NextEvent;
@@ -95,7 +91,7 @@ public class GameController : MonoBehaviour
             }
             else if (tmp_time >= EventTime)//이벤트 발생
             {
-                NewEvent();
+                NewEvent(model.NewEventNum());
                 SetNewEventData();
             }
             else//시간 흐름
@@ -109,7 +105,6 @@ public class GameController : MonoBehaviour
     public void SetNewEventData()
     {
         EventTime = Random.Range(5.0f, 8.0f);
-        NextEvent = EventPiece[Random.Range(0, EventPiece.Count)];
         tmp_time = 0.0f;
         TimeStop = false;
     }

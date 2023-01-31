@@ -23,16 +23,15 @@ public class RoadEventData
     {
         ID = info[0];
         Name = info[1];
-        NextRoad = info[2].Split(',');
+        NextRoad = info[2].Replace(" ","").Split(',');
 
-        if (!info[3].Equals("")) knowledge = info[3];
-        if (!info[4].Equals("")) strength = info[4];
-        if (!info[5].Equals("")) mental = info[5];
-        if (!info[6].Equals("")) charm = info[6];
+        if (!info[3].Replace(" ", "").Equals("")) knowledge = info[3];
+        if (!info[4].Replace(" ", "").Equals("")) strength = info[4];
+        if (!info[5].Replace(" ", "").Equals("")) mental = info[5];
+        if (!info[6].Replace(" ", "").Equals("")) charm = info[6];
 
         if (!info[7].Equals("")) point = int.Parse(info[7]);
 
-        //우선 공백
         //road_image = info[8];
         //back_image = info[9];
     }

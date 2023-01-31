@@ -8,6 +8,9 @@ public class GameModel
     private GameData _gameData;
     public GameData gameData { get { return _gameData; } }
 
+    private List<EventClass> EventPiece = new List<EventClass>();
+
+
     public GameModel()
     {
         _gameData = new GameData();
@@ -39,14 +42,14 @@ public class GameModel
     public void EventSet()
     {
         Debug.Log("Road : " + gameData.road_ID + " / " + GameManager.RoadData[gameData.road_ID].Name);
-        GameController.Instance.EventPiece.Clear();
+        EventPiece.Clear();
 
         for (int i = 0; i < GameManager.EventData.Count; i++)
         {
             if (GameManager.EventData[i].roadID[0].Equals(""))
             {
                 Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
-                GameController.Instance.EventPiece.Add(GameManager.EventData[i]);
+                EventPiece.Add(GameManager.EventData[i]);
             }
             else
             {
@@ -55,11 +58,16 @@ public class GameModel
                     if (GameManager.EventData[i].roadID[j].Equals(gameData.road_ID))
                     {
                         Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
-                        GameController.Instance.EventPiece.Add(GameManager.EventData[i]);
+                        EventPiece.Add(GameManager.EventData[i]);
                         break;
                     }
                 }
             }
         }
+    }
+
+    public EventClass NewEventNum()
+    {
+        return EventPiece[Random.Range(0, EventPiece.Count)];
     }
 }

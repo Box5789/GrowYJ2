@@ -87,10 +87,11 @@ public class GameView : MonoBehaviour
     }
 
 
-    public void NewEventView()
+    public void NewEventView(EventClass data)
     {
         //오브젝트 풀링
-        Instantiate(EventPrefab, SpawnPosition.position, SpawnPosition.rotation).GetComponent<EventObject>().SetEventClass(GameController.Instance.NextEvent, speed);
+        var newEventObject = EventObjectPool.getEventObject(data, speed);
+        newEventObject.transform.position = SpawnPosition.position;
     }
 
 
@@ -116,6 +117,7 @@ public class GameView : MonoBehaviour
                 Event_occured.result1_strength, Event_occured.result1_mental, 
                 Event_occured.result1_charm);
             Answer1_btn.onClick.RemoveAllListeners();
+            Answer2_btn.onClick.RemoveAllListeners();
         });
         Answer2_btn.onClick.AddListener(delegate
         {
@@ -123,6 +125,7 @@ public class GameView : MonoBehaviour
             GameController.Instance.InteractionViewResult(Event_occured.result2_knowledge,
                 Event_occured.result2_strength, Event_occured.result2_mental,
                 Event_occured.result2_charm);
+            Answer1_btn.onClick.RemoveAllListeners();
             Answer2_btn.onClick.RemoveAllListeners();
         });
     }
