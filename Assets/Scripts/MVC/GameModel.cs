@@ -6,7 +6,10 @@ using UnityEngine.Playables;
 public class GameModel
 {
     private GameData _gameData;
-    public GameData gameData { get { return _gameData; } }
+    public GameData gameData 
+    { 
+        get { return _gameData; }
+    }
 
     private List<EventClass> EventPiece = new List<EventClass>();
 
@@ -31,7 +34,7 @@ public class GameModel
 
         Debug.Log("[ Ω∫≈»¡∂¡§ ]\n" + gameData.knowledge.ToString() + " / " + gameData.strength.ToString() + " / " + gameData.mental.ToString() + " / " + gameData.charm.ToString());
 
-        GameController.Instance.EventOff();
+        GameController.Instance.EventOff(gameData);
     }
 
     public void ChangeRoad(string id) 

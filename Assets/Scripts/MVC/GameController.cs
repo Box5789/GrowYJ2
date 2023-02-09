@@ -46,11 +46,16 @@ public class GameController : MonoBehaviour
         //Connect Event
         InitGame += model.EventSet;
         InitGame += SetNewEventData;
+
         NewEvent += view.NewEventView;
+
         InteractionEvent += view.InteractionEvenView;
         OneWayEvent += view.OneWayEventView;//나중에 Action으로 수정
+
         ChangeStat += model.ChangeStat;
+
         Intersection += view.IntersectionEventView;
+
         ChangeRoad += model.ChangeRoad;
         ChangeRoad += view.ChangeRoadView;
         ChangeRoad += NewRoadResult;
@@ -58,6 +63,7 @@ public class GameController : MonoBehaviour
 
         //데이터 읽어오기 : 나중
         //초기 데이터 셋팅
+        
     }
 
     [Header("게임 조정 변수들")]
@@ -73,11 +79,11 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitGame();
         //변수 초기화 : 추후 수정
         GameTime = 0.0f;
         view.ChangeTime(GameTime);
-
-        InitGame();
+        view.ChangeStatView(model.gameData);
     }
 
     // Update is called once per frame
@@ -122,7 +128,11 @@ public class GameController : MonoBehaviour
     {
         ChangeStat(k, s, m, c);
     }
-    public void EventOff() { TimeStop = false; }
+    public void EventOff(GameData data) 
+    {
+        view.ChangeStatView(data);
+        TimeStop = false; 
+    }
 
 
     public void OneWayEventOn(EventClass e)

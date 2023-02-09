@@ -16,8 +16,14 @@ public class GameView : MonoBehaviour
 
 
     [Header("게임 조정 변수들")]
+
     //Timer
     Slider Timer_slide;
+
+    //Status
+    RectTransform Knowledge_Mask, Strength_Mask, Mental_Mask, Charm_Mask;
+    float StatMaskHeight;
+    float ky, sy, my, cy;
 
     //BackGround
     [SerializeField] float speed;
@@ -44,6 +50,10 @@ public class GameView : MonoBehaviour
         //Object
         SpawnPosition = GameObject.Find("EventSpawnPosition").transform;
         Timer_slide = GameObject.Find("Timer").gameObject.GetComponent<Slider>();
+        Knowledge_Mask = GameObject.Find("Knowledge").transform.Find("Mask").GetComponent<RectTransform>();
+        Strength_Mask = GameObject.Find("Strength").transform.Find("Mask").GetComponent<RectTransform>();
+        Mental_Mask = GameObject.Find("Mental").transform.Find("Mask").GetComponent<RectTransform>();
+        Charm_Mask = GameObject.Find("Charm").transform.Find("Mask").GetComponent<RectTransform>();
 
         //BackGround
         xScreenHalfSize = (int)(Camera.main.orthographicSize * Camera.main.aspect) * 2; //Debug.Log(xScreenHalfSize);//10.5
@@ -59,6 +69,8 @@ public class GameView : MonoBehaviour
             BackGroundPositionGroup.Add(list);
         }
 
+        //Value
+        StatMaskHeight = Knowledge_Mask.sizeDelta.y;
 
         destroyPosX = -xScreenHalfSize;
         spawnPosX = xScreenHalfSize * (BackGroundPositionGroup[0].Length - 1);
@@ -94,6 +106,25 @@ public class GameView : MonoBehaviour
     public void ChangeTime(float time)
     {
         Timer_slide.value = time;
+    }
+
+    public void ChangeStatView(GameData data)
+    {
+        //Data stat값 정수로 바꿔야 할듯
+        ky = StatMaskHeight * (data.knowledge / 100f);
+        sy = StatMaskHeight * (data.strength / 100f);
+        my = StatMaskHeight * (data.mental / 100f);
+        cy = StatMaskHeight * (data.charm / 100f);
+
+        Knowledge_Mask.sizeDelta = new Vector2(Knowledge_Mask.sizeDelta.x, ky);
+        Strength_Mask.sizeDelta = new Vector2(Strength_Mask.sizeDelta.x, sy);
+        Mental_Mask.sizeDelta = new Vector2(Mental_Mask.sizeDelta.x, my);
+        Charm_Mask.sizeDelta = new Vector2(Charm_Mask.sizeDelta.x, cy);
+
+        Knowledge_Mask.anchoredPosition = new Vector3(Knowledge_Mask.anchoredPosition.x, (StatMaskHeight - ky) / -2f, 0);
+        Strength_Mask.anchoredPosition = new Vector3(Strength_Mask.anchoredPosition.x, (StatMaskHeight - sy) / -2f, 0);
+        Mental_Mask.anchoredPosition = new Vector3(Mental_Mask.anchoredPosition.x, (StatMaskHeight - my) / -2f, 0);
+        Charm_Mask.anchoredPosition = new Vector3(Charm_Mask.anchoredPosition.x, (StatMaskHeight - cy) / -2f, 0);
     }
 
 
