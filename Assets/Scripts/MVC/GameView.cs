@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,6 +16,9 @@ public class GameView : MonoBehaviour
 
 
     [Header("게임 조정 변수들")]
+    //Timer
+    Slider Timer_slide;
+
     //BackGround
     [SerializeField] float speed;
     List<GameObject[]> BackGroundPositionGroup = new List<GameObject[]>();
@@ -39,7 +43,7 @@ public class GameView : MonoBehaviour
 
         //Object
         SpawnPosition = GameObject.Find("EventSpawnPosition").transform;
-
+        Timer_slide = GameObject.Find("Timer").gameObject.GetComponent<Slider>();
 
         //BackGround
         xScreenHalfSize = (int)(Camera.main.orthographicSize * Camera.main.aspect) * 2; //Debug.Log(xScreenHalfSize);//10.5
@@ -54,6 +58,7 @@ public class GameView : MonoBehaviour
             }
             BackGroundPositionGroup.Add(list);
         }
+
 
         destroyPosX = -xScreenHalfSize;
         spawnPosX = xScreenHalfSize * (BackGroundPositionGroup[0].Length - 1);
@@ -84,6 +89,11 @@ public class GameView : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void ChangeTime(float time)
+    {
+        Timer_slide.value = time;
     }
 
 

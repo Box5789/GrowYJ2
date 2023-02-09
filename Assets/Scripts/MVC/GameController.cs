@@ -75,7 +75,8 @@ public class GameController : MonoBehaviour
     {
         //변수 초기화 : 추후 수정
         GameTime = 0.0f;
-        
+        view.ChangeTime(GameTime);
+
         InitGame();
     }
 
@@ -98,6 +99,7 @@ public class GameController : MonoBehaviour
             {
                 tmp_time += Time.deltaTime;
                 GameTime += Time.deltaTime;
+                view.ChangeTime(GameTime);
             }
         }
     }
