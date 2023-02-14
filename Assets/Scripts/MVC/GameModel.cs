@@ -12,12 +12,16 @@ public class GameModel
     }
 
     private List<EventClass> EventPiece = new List<EventClass>();
+    private int EventWeight = 0;
 
 
     public GameModel()
     {
         _gameData = new GameData();
         _gameData.init();
+
+        _gameData.road_ID = DebugTest.Instance.GetRoadData();
+        DebugTest.Instance.PrintGameStat(gameData);
     }
 
     public void InitDataSet()
@@ -25,14 +29,15 @@ public class GameModel
         //저장된 게임데이터 읽어오기 -> 뷰 이벤트 실행
     }
 
-    public void ChangeStat(int k, int s, int m, int c)
+    public void ChangeStat(int[] stat_data)
     {
-        gameData.knowledge += k;
-        gameData.strength += s;
-        gameData.mental += m;
-        gameData.charm += c;
 
-        Debug.Log("[ 스탯조정 ]\n" + gameData.knowledge.ToString() + " / " + gameData.strength.ToString() + " / " + gameData.mental.ToString() + " / " + gameData.charm.ToString());
+        for(int i=0; i < GameManager.Instance.StatCount; i++)
+        {
+            gameData.stat[i] += stat_data[i];
+        }
+
+        DebugTest.Instance.PrintGameStat(gameData);
 
         GameController.Instance.EventOff(gameData);
     }
@@ -44,15 +49,15 @@ public class GameModel
 
     public void EventSet()
     {
-        Debug.Log("Road : " + gameData.road_ID + " / " + GameManager.RoadData[gameData.road_ID].Name);
         EventPiece.Clear();
+        EventWeight = 0;
 
         for (int i = 0; i < GameManager.EventData.Count; i++)
         {
             if (GameManager.EventData[i].roadID[0].Equals(""))
             {
-                Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
                 EventPiece.Add(GameManager.EventData[i]);
+                EventWeight += GameManager.EventData[i].weight;
             }
             else
             {
@@ -60,17 +65,30 @@ public class GameModel
                 {
                     if (GameManager.EventData[i].roadID[j].Equals(gameData.road_ID))
                     {
-                        Debug.Log("Event Add : " + GameManager.EventData[i].EventID);
                         EventPiece.Add(GameManager.EventData[i]);
+                        EventWeight += GameManager.EventData[i].weight;
                         break;
                     }
                 }
             }
         }
+
+        DebugTest.Instance.SetEventPiece(EventPiece);
     }
 
     public EventClass NewEventNum()
     {
-        return EventPiece[Random.Range(0, EventPiece.Count)];
+        int rand = Random.Range(0, EventWeight);
+
+        for(int i=0, result = 0; i < EventPiece.Count; i++)
+        {
+            result += EventPiece[i].weight;
+            if (result >= rand)
+                return EventPiece[i];
+        }
+
+        return EventPiece[Random.Range(0, EventPiece.Count) - 1];
     }
+
+
 }

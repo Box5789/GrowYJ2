@@ -9,6 +9,8 @@ public class EventClass
     public string EventID;
     public string[] roadID;
 
+    public int weight;
+
     public string select_type;
     public bool conversation_type;
 
@@ -19,42 +21,41 @@ public class EventClass
     public string answer1;
     public string answer2;
 
-    public int result1_knowledge;
-    public int result1_strength;
-    public int result1_mental;
-    public int result1_charm;
-
-    public int result2_knowledge;
-    public int result2_strength;
-    public int result2_mental;
-    public int result2_charm;
+    public int[] result1 = new int[GameManager.Instance.StatCount];
+    public int[] result2 = new int[GameManager.Instance.StatCount];
 
     public EventClass(string[] info)
     {
-        EventID = info[0];
-        roadID = info[1].Replace(" ","").Split(",");
+        int i = 0;
 
-        select_type = info[2];
-        conversation_type = Convert.ToBoolean(info[3]);
+        EventID = info[i++];
+        roadID = info[i++].Replace(" ","").Split(",");
 
-        image = info[4];
+        weight = int.Parse(info[i++]);
 
-        question = info[5];
+        select_type = info[i++];
+        conversation_type = Convert.ToBoolean(info[i++]);
 
-        result1_knowledge = int.Parse(info[8]);
-        result1_strength = int.Parse(info[9]);
-        result1_mental= int.Parse(info[10]);
-        result1_charm = int.Parse(info[11]);
+        image = info[i++];
+
+        question = info[i++];
+
+        answer1 = info[i++];
+
+        if (conversation_type) answer2 = info[i++];
+        else i++;
+
+        for(int j=0; j < result1.Length; j++)
+        {
+            result1[j] = int.Parse(info[i++]);
+        }
 
         if (conversation_type)
         {
-            answer1 = info[6];
-            answer2 = info[7];
-
-            result2_knowledge = int.Parse(info[12]);
-            result2_strength = int.Parse(info[13]);
-            result2_mental = int.Parse(info[14]);
-            result2_charm = int.Parse(info[15]);
+            for(int j=0; j < result2.Length; j++) 
+            {
+                result2[j] = int.Parse(info[i++]);
+            }
         }
     }
 }

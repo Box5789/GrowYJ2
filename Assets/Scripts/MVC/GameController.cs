@@ -13,7 +13,7 @@ public class GameController : MonoBehaviour
 
     public delegate void VoidFunc();
     public delegate void EventFunc(EventClass e);
-    public delegate void ChangeStatFunc(int k, int s, int m, int c);
+    public delegate void ChangeStatFunc(int[] stat);
     public delegate void RoadEvent(GameData gameData);
     public delegate void StrFunc(string str);
 
@@ -89,7 +89,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!TimeStop)
+        if (!TimeStop && !GameManager.Instance.Pause)
         {
             if (GameTime >= IntersectionTime)//분기점 체크
             {
@@ -123,10 +123,12 @@ public class GameController : MonoBehaviour
     {
         TimeStop = true;
         InteractionEvent(e);
+
+        DebugTest.Instance.EventData(e);
     }
-    public void InteractionViewResult(int k, int s, int m, int c)
+    public void InteractionViewResult(int[] stat)
     {
-        ChangeStat(k, s, m, c);
+        ChangeStat(stat);
     }
     public void EventOff(GameData data) 
     {
@@ -137,8 +139,10 @@ public class GameController : MonoBehaviour
 
     public void OneWayEventOn(EventClass e)
     {
-        ChangeStat(e.result1_knowledge, e.result1_strength, e.result1_mental, e.result1_charm);
+        ChangeStat(e.result1);
         OneWayEvent(e);
+
+        DebugTest.Instance.EventData(e);
     }
 
 

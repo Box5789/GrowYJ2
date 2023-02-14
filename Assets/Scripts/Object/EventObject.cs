@@ -16,8 +16,6 @@ public class EventObject : MonoBehaviour
 
         if (d != null)
         {
-            Debug.Log(Data.EventID + " / " + Data.select_type + " / " + Data.conversation_type);
-
             //강제 - 클릭&&접촉 : 기본
 
             if (Data.select_type.Equals("선택"))//선택 - Only 클릭

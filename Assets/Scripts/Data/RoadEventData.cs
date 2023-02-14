@@ -9,10 +9,7 @@ public class RoadEventData
 
     public string[] NextRoad;
 
-    private string knowledge;
-    private string strength;
-    private string mental;
-    private string charm;
+    private string[] stat_conditions = new string[GameManager.Instance.StatCount];
 
     public int point;
 
@@ -21,16 +18,21 @@ public class RoadEventData
 
     public RoadEventData(string[] info)
     {
-        ID = info[0];
-        Name = info[1];
-        NextRoad = info[2].Replace(" ","").Split(',');
+        int i = 0; 
 
-        if (!info[3].Replace(" ", "").Equals("")) knowledge = info[3];
-        if (!info[4].Replace(" ", "").Equals("")) strength = info[4];
-        if (!info[5].Replace(" ", "").Equals("")) mental = info[5];
-        if (!info[6].Replace(" ", "").Equals("")) charm = info[6];
+        ID = info[i++];
+        Name = info[i++];
+        NextRoad = info[i++].Replace(" ","").Split(',');
 
-        if (!info[7].Equals("")) point = int.Parse(info[7]);
+        for(int j=0; j < stat_conditions.Length; j++)
+        {
+            if (!info[i].Replace(" ", "").Equals(""))
+                stat_conditions[j] = info[i++];
+            else
+                i++;
+        }
+
+        if (!info[i].Equals("")) point = int.Parse(info[i++]);
 
         //road_image = info[8];
         //back_image = info[9];
@@ -40,29 +42,24 @@ public class RoadEventData
     public bool CheckRoad(GameData game)
     {
         bool[] check = new bool[4] { false, false, false, false };
-        int[] stat = new int[4] { game.knowledge, game.strength, game.mental, game.charm };
-        string[] criterion = new string[4] { knowledge, strength, mental, charm };
-        string[] criterion_num = new string[2];
 
-        for (int i=0; i < stat.Length; i++)
+        for (int i=0; i < stat_conditions.Length; i++)
         {
-            if (criterion[i] == null)//No Condition
+            if (stat_conditions[i] == null)//No Condition
                 check[i] = true;
-            else if (criterion[i].IndexOf("<") == 0)//More than
+            else if (stat_conditions[i].IndexOf("<") == 0)//More than
             {
-                if (int.Parse(criterion[i].Substring(1, criterion[i].Length - 1)) <= stat[i])
+                if (int.Parse(stat_conditions[i].Substring(1, stat_conditions[i].Length - 1)) <= game.stat[i])
                     check[i] = true;
             }
-            else
+            else if (stat_conditions[i].IndexOf("<") == stat_conditions[i].Length - 1)//Less than
             {
-                criterion_num = criterion[i].Split("<");
-
-                if (criterion[i].IndexOf("<") == criterion[i].Length - 1)//Less than
-                {
-                    if (stat[i] <= int.Parse(criterion_num[0]))
-                        check[i] = true;
-                }
-                else if (int.Parse(criterion_num[0]) <= stat[i] && stat[i] <= int.Parse(criterion_num[1]))//More & Less
+                if (game.stat[i] <= int.Parse(stat_conditions[i].Split("<")[0]))
+                    check[i] = true;
+            }
+            else //More & Less
+            {
+                if (int.Parse(stat_conditions[i].Split("<")[0]) <= game.stat[i] && game.stat[i] <= int.Parse(stat_conditions[i].Split("<")[1]))
                     check[i] = true;
             }
         }

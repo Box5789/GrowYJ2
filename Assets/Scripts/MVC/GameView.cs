@@ -21,9 +21,9 @@ public class GameView : MonoBehaviour
     Slider Timer_slide;
 
     //Status
-    RectTransform Knowledge_Mask, Strength_Mask, Mental_Mask, Charm_Mask;
+    RectTransform[] Stat_Mask;
     float StatMaskHeight;
-    float ky, sy, my, cy;
+    float[] stat_y;
 
     //BackGround
     [SerializeField] float speed;
@@ -50,10 +50,12 @@ public class GameView : MonoBehaviour
         //Object
         SpawnPosition = GameObject.Find("EventSpawnPosition").transform;
         Timer_slide = GameObject.Find("Timer").gameObject.GetComponent<Slider>();
-        Knowledge_Mask = GameObject.Find("Knowledge").transform.Find("Mask").GetComponent<RectTransform>();
-        Strength_Mask = GameObject.Find("Strength").transform.Find("Mask").GetComponent<RectTransform>();
-        Mental_Mask = GameObject.Find("Mental").transform.Find("Mask").GetComponent<RectTransform>();
-        Charm_Mask = GameObject.Find("Charm").transform.Find("Mask").GetComponent<RectTransform>();
+
+        Stat_Mask = new RectTransform[GameManager.Instance.StatCount];
+        for (int i=0; i < GameManager.Instance.StatCount; i++)
+        {
+            Stat_Mask[i] = GameObject.Find((((GameManager.stat_name)i).ToString())).transform.Find("Mask").GetComponent<RectTransform>();
+        }
 
         //BackGround
         xScreenHalfSize = (int)(Camera.main.orthographicSize * Camera.main.aspect) * 2; //Debug.Log(xScreenHalfSize);//10.5
@@ -70,7 +72,8 @@ public class GameView : MonoBehaviour
         }
 
         //Value
-        StatMaskHeight = Knowledge_Mask.sizeDelta.y;
+        stat_y = new float[GameManager.Instance.StatCount];
+        StatMaskHeight = GameObject.Find("Knowledge").gameObject.GetComponent<RectTransform>().sizeDelta.y;
 
         destroyPosX = -xScreenHalfSize;
         spawnPosX = xScreenHalfSize * (BackGroundPositionGroup[0].Length - 1);
@@ -110,21 +113,12 @@ public class GameView : MonoBehaviour
 
     public void ChangeStatView(GameData data)
     {
-        //Data stat값 정수로 바꿔야 할듯
-        ky = StatMaskHeight * (data.knowledge / 100f);
-        sy = StatMaskHeight * (data.strength / 100f);
-        my = StatMaskHeight * (data.mental / 100f);
-        cy = StatMaskHeight * (data.charm / 100f);
-
-        Knowledge_Mask.sizeDelta = new Vector2(Knowledge_Mask.sizeDelta.x, ky);
-        Strength_Mask.sizeDelta = new Vector2(Strength_Mask.sizeDelta.x, sy);
-        Mental_Mask.sizeDelta = new Vector2(Mental_Mask.sizeDelta.x, my);
-        Charm_Mask.sizeDelta = new Vector2(Charm_Mask.sizeDelta.x, cy);
-
-        Knowledge_Mask.anchoredPosition = new Vector3(Knowledge_Mask.anchoredPosition.x, (StatMaskHeight - ky) / -2f, 0);
-        Strength_Mask.anchoredPosition = new Vector3(Strength_Mask.anchoredPosition.x, (StatMaskHeight - sy) / -2f, 0);
-        Mental_Mask.anchoredPosition = new Vector3(Mental_Mask.anchoredPosition.x, (StatMaskHeight - my) / -2f, 0);
-        Charm_Mask.anchoredPosition = new Vector3(Charm_Mask.anchoredPosition.x, (StatMaskHeight - cy) / -2f, 0);
+        for(int i=0; i < GameManager.Instance.StatCount; i++)
+        {
+            stat_y[i] = StatMaskHeight * (data.stat[i] / 100f);
+            Stat_Mask[i].sizeDelta = new Vector2(Stat_Mask[i].sizeDelta.x, stat_y[i]);
+            Stat_Mask[i].anchoredPosition = new Vector3(Stat_Mask[i].anchoredPosition.x, (StatMaskHeight - stat_y[i]) / -2f, 0);
+        }
     }
 
 
@@ -151,23 +145,18 @@ public class GameView : MonoBehaviour
         Answer2_btn.transform.GetComponentInChildren<TMP_Text>().text = Event_occured.answer2;
 
         //on Click Setting
+        Answer1_btn.onClick.RemoveAllListeners();
         Answer1_btn.onClick.AddListener(delegate
         {
             InteractionPanel.SetActive(false);
-            GameController.Instance.InteractionViewResult(Event_occured.result1_knowledge, 
-                Event_occured.result1_strength, Event_occured.result1_mental, 
-                Event_occured.result1_charm);
-            Answer1_btn.onClick.RemoveAllListeners();
-            Answer2_btn.onClick.RemoveAllListeners();
+            GameController.Instance.InteractionViewResult(Event_occured.result1);
         });
+
+        Answer2_btn.onClick.RemoveAllListeners();
         Answer2_btn.onClick.AddListener(delegate
         {
             InteractionPanel.SetActive(false);
-            GameController.Instance.InteractionViewResult(Event_occured.result2_knowledge,
-                Event_occured.result2_strength, Event_occured.result2_mental,
-                Event_occured.result2_charm);
-            Answer1_btn.onClick.RemoveAllListeners();
-            Answer2_btn.onClick.RemoveAllListeners();
+            GameController.Instance.InteractionViewResult(Event_occured.result2);
         });
     }
     public void OneWayEventView(EventClass Event_occured) 
@@ -217,7 +206,7 @@ public class GameView : MonoBehaviour
                     option_btn.transform.GetComponentInChildren<TMP_Text>().text = GameManager.RoadData[index].Name + " 잠김";
                 }
             }
-            else
+            else//Button Hide
             {
                 option_btn.gameObject.SetActive(false);
             }

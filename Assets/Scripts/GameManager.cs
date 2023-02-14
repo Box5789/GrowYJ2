@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,23 @@ public class GameManager : MonoBehaviour
     //Dictionary<string, OneSideEventData> OneSideData = new Dictionary<string, OneSideEventData>();
     public static List<EventClass> EventData = new List<EventClass>();
     public static Dictionary<string, RoadEventData> RoadData = new Dictionary<string, RoadEventData>();
+
+
+
+    //Game State
+    public bool Pause = false;
+    public int Point;
+
+
+    //Stat
+    public enum stat_name 
+    { 
+        Knowledge = 0,
+        Strength = 1,
+        Mental = 2,
+        Charm = 3
+    }
+    public readonly int StatCount = System.Enum.GetValues(typeof(stat_name)).Length;
 
 
 
@@ -122,4 +140,15 @@ public class GameManager : MonoBehaviour
     {
 
     }
+
+
+    //Pause
+    public void OnPause()
+    {
+        Pause = true;
+    }
+
+
+    //SceneManager
+    public void GotoMain() { SceneManager.LoadScene("Main"); }
 }
