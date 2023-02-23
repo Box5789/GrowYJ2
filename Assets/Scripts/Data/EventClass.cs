@@ -40,10 +40,13 @@ public class EventClass
 
         question = info[i++];
 
-        answer1 = info[i++];
 
-        if (conversation_type) answer2 = info[i++];
-        else i++;
+        if (conversation_type)
+        {
+            answer1 = info[i++];
+            answer2 = info[i++];
+        }
+        else i += 2;
 
         for(int j=0; j < result1.Length; j++)
         {
