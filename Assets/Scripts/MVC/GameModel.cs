@@ -80,6 +80,8 @@ public class GameModel
     {
         int rand = Random.Range(0, EventWeight);
 
+        Debug.Log(rand);
+
         for(int i=0, result = 0; i < EventPiece.Count; i++)
         {
             result += EventPiece[i].weight;
