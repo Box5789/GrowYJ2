@@ -8,28 +8,29 @@ using UnityEngine.Profiling.Memory.Experimental;
 public class TestEndingNode : MonoBehaviour
 {
     public TestEndingData data;
+    // ↓ Test : 테스트 확인 용
     [SerializeField] private string ID;
     [SerializeField] private string Name;
-    [SerializeField] private TestEndingData Parent;
-    [SerializeField] private List<TestEndingData> Childs;
+    [SerializeField] private GameObject Parent;
+    [SerializeField] private List<GameObject> Childs;
 
     void SetData()
     {
         ID = data.GetID();
         Name = data.GetName();
-        Parent = data.GetParent();
-        Childs = data.GetChildrens();
+        Parent = data.GetParentGameObject();
+        Childs = data.GetChildrensObject();
     }
 
-    public void Remove(TestEndingData remove)
+    public void Remove()
     {
-        //TODO : 테스트 필요
-        //Q:TestEndingData안에서 Destroy 시 게임오브젝트도 삭제 되나? : 될듯?
-        foreach (TestEndingData child in data.GetChildrens())
+        data.GetParent().DeleteChild(gameObject);
+        foreach (GameObject child in data.GetChildrensObject())
         {
-            Remove(child);
+            data.DeleteChild(child);
+            child.GetComponent<TestEndingNode>().Remove();
         }
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
 
     //Var
@@ -68,8 +69,8 @@ public class TestEndingNode : MonoBehaviour
         {
             if(Input.GetKeyUp(KeyCode.Delete))
             {
-                //노드삭제 - 미완
-                Remove(data);
+                // TEST : 노드삭제
+                Remove();
             }
         }
         
@@ -77,23 +78,27 @@ public class TestEndingNode : MonoBehaviour
 
     private void OnMouseDown()
     {
+        // TODO : MouseClick 구현
+        // Click 변수가 따로 없어 Over된 상황에서 클릭시 Round를 꺼버림
+
         clickposition = Input.mousePosition;
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            EEM.Instance.StartDrag = this;
+            EEM.Instance.StartDrag = gameObject;
             Drag = true;
 
             line.enabled = true;
             line.SetPosition(0, transform.position);
+            line.SetPosition(1, transform.position);
         }
         else
         {
             Move = true;
         }
 
-        EEM.Instance.DragNode = this;
-        this.enabled = true;
+        EEM.Instance.DragNode = gameObject;
+        enabled = true;
     }
 
     private void OnMouseDrag()
@@ -106,6 +111,7 @@ public class TestEndingNode : MonoBehaviour
             if (Move)
             {
                 transform.position = mouse;
+                data.SetPosition(transform.position);
 
                 if (Line) line.SetPosition(0, transform.position);
             }
@@ -119,11 +125,12 @@ public class TestEndingNode : MonoBehaviour
 
     private void OnMouseOver()
     {
+        Debug.Log("Drag : " + Drag + "\nMove : " + Move);
         if(!(Drag) && !(Move))
         {
-            if(EEM.Instance.StartDrag != this)
+            if(EEM.Instance.StartDrag != gameObject)
             {
-                EEM.Instance.EndDrag = this;
+                EEM.Instance.EndDrag = gameObject;
                 Round.SetActive(true);
             }
         }
@@ -134,7 +141,7 @@ public class TestEndingNode : MonoBehaviour
     {
         if (!(Drag) && !(Move))
         {
-            if (EEM.Instance.StartDrag != this)
+            if (EEM.Instance.StartDrag != gameObject)
             {
                 EEM.Instance.EndDrag = null;
                 Round.SetActive(false);
@@ -144,9 +151,14 @@ public class TestEndingNode : MonoBehaviour
 
     private void OnMouseUp()
     {
+        if (Move)
+        {
+            Move = false;
+        }
+
         if(Vector2.Equals(clickposition, Input.mousePosition))
         {
-            
+            Debug.Log("클릭");
             if (Round.active)
             {
                 Round.SetActive(false);
@@ -156,10 +168,6 @@ public class TestEndingNode : MonoBehaviour
                 Round.SetActive(true);
             }
         }
-        else if (Move)
-        {
-            Move = false;
-        }
         else if(Drag)
         {
             Drag = false;
@@ -168,13 +176,14 @@ public class TestEndingNode : MonoBehaviour
             {
                 if (data.GetParent() != null)
                 {
-                    data.GetParent().DeleteChild(data);
+                    data.GetParent().DeleteChild(gameObject);
                 }
 
-                data.SetParent(EEM.Instance.EndDrag.data);
-                EEM.Instance.EndDrag.data.AddChild(data);
+                data.SetParent(EEM.Instance.EndDrag);
+                EEM.Instance.EndDrag.GetComponent<TestEndingNode>().data.AddChild(gameObject);
 
                 Line = true;
+                line.SetPosition(1, data.GetParent().GetPosition());
             }
             else if(data.GetParent() == null)
             {

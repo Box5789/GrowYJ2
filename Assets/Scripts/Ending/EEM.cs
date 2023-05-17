@@ -24,9 +24,9 @@ public class EEM : MonoBehaviour
     }
 
     [Header("관리")]
-    public TestEndingNode DragNode = null;
-    public TestEndingNode StartDrag = null;
-    public TestEndingNode EndDrag = null;
+    public GameObject DragNode = null;
+    public GameObject StartDrag = null;
+    public GameObject EndDrag = null;
 
     [Header("노드")]
     GameObject temp;
@@ -39,7 +39,6 @@ public class EEM : MonoBehaviour
     Button SaveBtn;
     SaveNode save;
 
-    //public Dictionary<string, TestEndingData> END = new Dictionary<string, TestEndingData>();
 
     private void SetTestEndingNode()
     {
@@ -50,7 +49,6 @@ public class EEM : MonoBehaviour
         {
             Root = new TestEndingData();
 
-            //아무것도 없을 때 : root 노드 생성
             temp = Instantiate(prefab);
             temp.transform.parent = nodegroup.transform;
 
@@ -62,12 +60,7 @@ public class EEM : MonoBehaviour
         }
         else
         {
-            //있을 때 : 1) RootData만 있음 / 2) DataDictionqry 있음
-            // 1) RootData만 있을 때 : Root에 Data 담겨있음
             Traversal(Root);
-
-            // 2) Data Dictionary에 다 담겨있을 때
-
         }
     }
 
@@ -75,7 +68,6 @@ public class EEM : MonoBehaviour
     {
         if(data != null)
         {
-            //노드 추가
             temp = Instantiate(prefab, nodegroup.transform.position, nodegroup.transform.rotation);
 
             temp.name = data.GetName();

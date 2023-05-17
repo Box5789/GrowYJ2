@@ -1,39 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AddNode : MonoBehaviour
 {
-    InputField IDIF, NameIF;
-    Button CancelBtn, OkBtn;
+    Button OkBtn;
+    TMP_InputField IDIF, NameIF;
+
 
     // Start is called before the first frame update
     void Start()
-    {
-        IDIF = transform.Find("IDInputField").gameObject.GetComponent<InputField>();
-        NameIF = transform.Find("NameInputField").gameObject.GetComponent<InputField>();
-        CancelBtn = transform.Find("CancelBtn").gameObject.GetComponent<Button>();
+    {   
         OkBtn = transform.Find("OKBtn").gameObject.GetComponent<Button>();
+        IDIF = transform.Find("IDInputField").gameObject.GetComponent<TMP_InputField>();
+        NameIF = transform.Find("NameInputField").gameObject.GetComponent<TMP_InputField>();
 
         OkBtn.onClick.AddListener(delegate
         {
-             if(!IDIF.text.Equals("") && !NameIF.text.Equals(""))
+            
+            if (!IDIF.text.Equals("") && !NameIF.text.Equals(""))
             {
-                //정보 이용해서 노드 추가
-                //기본 위치는 0,0,0
-                //NodeGroup Object 필요
-                //Prefab 필요
-                //Prefab에 들어갈 스크립트 필요
-                //스크립트에 들어갈 데이터 셋팅 필요
+                GameObject node = Instantiate(Resources.Load<GameObject>("Prefabs/EndingNode"));
+                node.transform.parent = GameObject.Find("EndingNodeGroup").gameObject.transform;
+                
+                string id, name;
+                id = IDIF.text; 
+                name = NameIF.text; 
+
+                TestEndingData data = new TestEndingData();
+                data.SetData(id, name, Vector3.zero, null);
+
+                node.AddComponent<TestEndingNode>().data = data;
+
+                gameObject.SetActive(false);
             }
         });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
