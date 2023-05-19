@@ -29,6 +29,7 @@ public class EEM : MonoBehaviour
     public GameObject EndDrag = null;
 
     [Header("³ëµå")]
+    public int Index;
     GameObject temp;
     [SerializeField] GameObject nodegroup;
     [SerializeField] GameObject prefab;

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class AddNode : MonoBehaviour
@@ -23,6 +22,8 @@ public class AddNode : MonoBehaviour
             
             if (!IDIF.text.Equals("") && !NameIF.text.Equals(""))
             {
+                //TODO : 노드 키 중복 확인
+
                 GameObject node = Instantiate(Resources.Load<GameObject>("Prefabs/EndingNode"));
                 node.transform.parent = GameObject.Find("EndingNodeGroup").gameObject.transform;
                 
@@ -34,6 +35,9 @@ public class AddNode : MonoBehaviour
                 data.SetData(id, name, Vector3.zero, null);
 
                 node.AddComponent<TestEndingNode>().data = data;
+
+                IDIF.text = "n" + (++EEM.Instance.Index).ToString();
+                NameIF.text = "";
 
                 gameObject.SetActive(false);
             }

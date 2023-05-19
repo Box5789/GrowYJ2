@@ -25,10 +25,14 @@ public class TestEndingNode : MonoBehaviour
     public void Remove()
     {
         data.GetParent().DeleteChild(gameObject);
-        foreach (GameObject child in data.GetChildrensObject())
+
+        if(data.GetChildrens() == null)
         {
-            data.DeleteChild(child);
-            child.GetComponent<TestEndingNode>().Remove();
+            foreach (GameObject child in data.GetChildrensObject())
+            {
+                data.DeleteChild(child);
+                child.GetComponent<TestEndingNode>().Remove();
+            }
         }
         Destroy(gameObject);
     }
@@ -36,7 +40,7 @@ public class TestEndingNode : MonoBehaviour
     //Var
     Vector3 mouse, clickposition;
     LineRenderer line;
-    bool Move, Drag, Line, Click = false;
+    bool Move, Drag, Line, Select = false;
 
     GameObject Round;
 
@@ -65,11 +69,10 @@ public class TestEndingNode : MonoBehaviour
         {
             line.SetPosition(0, transform.position);
         }
-        if (Click)
+        if (Select)
         {
             if(Input.GetKeyUp(KeyCode.Delete))
             {
-                // TEST : 노드삭제
                 Remove();
             }
         }
@@ -79,7 +82,6 @@ public class TestEndingNode : MonoBehaviour
     private void OnMouseDown()
     {
         // TODO : MouseClick 구현
-        // Click 변수가 따로 없어 Over된 상황에서 클릭시 Round를 꺼버림
 
         clickposition = Input.mousePosition;
 
@@ -125,8 +127,7 @@ public class TestEndingNode : MonoBehaviour
 
     private void OnMouseOver()
     {
-        Debug.Log("Drag : " + Drag + "\nMove : " + Move);
-        if(!(Drag) && !(Move))
+        if(!(Drag) && !(Move) && !Select)
         {
             if(EEM.Instance.StartDrag != gameObject)
             {
@@ -134,12 +135,11 @@ public class TestEndingNode : MonoBehaviour
                 Round.SetActive(true);
             }
         }
-
     }
 
     private void OnMouseExit()
     {
-        if (!(Drag) && !(Move))
+        if (!(Drag) && !(Move) && !(Select))
         {
             if (EEM.Instance.StartDrag != gameObject)
             {
@@ -158,13 +158,14 @@ public class TestEndingNode : MonoBehaviour
 
         if(Vector2.Equals(clickposition, Input.mousePosition))
         {
-            Debug.Log("클릭");
-            if (Round.active)
+            if (Select)
             {
+                Select = false;
                 Round.SetActive(false);
             }
             else
             {
+                Select = true;
                 Round.SetActive(true);
             }
         }

@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 5097642229131458900}
   - component: {fileID: 5097642229131458901}
   m_Layer: 0
-  m_Name: Round (1)
+  m_Name: Round
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
