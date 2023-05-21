@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Profiling.Memory.Experimental;
 
 public class TestEndingNode : MonoBehaviour
 {
@@ -13,6 +11,9 @@ public class TestEndingNode : MonoBehaviour
     [SerializeField] private string Name;
     [SerializeField] private GameObject Parent;
     [SerializeField] private List<GameObject> Childs;
+
+    private GameObject UIGroup;
+    private GameObject UIText;
 
     void SetData()
     {
@@ -56,6 +57,12 @@ public class TestEndingNode : MonoBehaviour
         Round.SetActive(false);
 
         SetData();
+
+        //노드 확인용 UI
+        UIText = Instantiate(Resources.Load<GameObject>("Prefabs/NodeName"));
+        UIText.transform.parent = GameObject.Find("Canvas/NodeNameGroup").gameObject.transform;
+        UIText.name = data.GetID() + "_NameText";
+        UIText.GetComponent<TMP_Text>().text = data.GetName();
     }
 
     // Update is called once per frame
@@ -76,13 +83,13 @@ public class TestEndingNode : MonoBehaviour
                 Remove();
             }
         }
-        
+
+        //UI
+        UIText.transform.position = Camera.main.WorldToScreenPoint(transform.position);
     }
 
     private void OnMouseDown()
     {
-        // TODO : MouseClick 구현
-
         clickposition = Input.mousePosition;
 
         if (Input.GetKey(KeyCode.LeftControl))
