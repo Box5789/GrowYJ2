@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 public class EEM : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class EEM : MonoBehaviour
     public GameObject EndDrag = null;
 
     [Header("³ëµå")]
-    public int Index;
+    public static int Index;
     GameObject temp;
     [SerializeField] GameObject nodegroup;
     [SerializeField] GameObject prefab;
@@ -58,17 +59,20 @@ public class EEM : MonoBehaviour
             temp.AddComponent<TestEndingNode>().data = Root;
 
             RootNode = temp.GetComponent<TestEndingNode>();
+
+            Index = 1;
         }
         else
         {
-            Traversal(Root);
+            TraversalView(Root);
         }
     }
 
-    private void Traversal(TestEndingData data)
+    private void TraversalView(TestEndingData data)
     {
         if(data != null)
         {
+            Index++;
             temp = Instantiate(prefab, nodegroup.transform.position, nodegroup.transform.rotation);
 
             temp.name = data.GetName();
@@ -77,9 +81,39 @@ public class EEM : MonoBehaviour
 
             foreach (TestEndingData child in data.GetChildrens())
             {
-                Traversal(child);
+                TraversalView(child);
             }
         }
+    }
+
+    public bool TraversalKeyCheck(TestEndingData data, string key)
+    {
+        if (data.GetID().Equals(key)) 
+            return false;
+        else
+        {
+            foreach (TestEndingData child in data.GetChildrens())
+            {
+                if (!TraversalKeyCheck(child, key)) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool TraversalNameCheck(TestEndingData data, string name)
+    {
+        if (data.GetName().Equals(name))
+            return false;
+        else
+        {
+            foreach (TestEndingData child in data.GetChildrens())
+            {
+                if (!TraversalKeyCheck(child, name)) return false;
+            }
+        }
+
+        return true;
     }
 
     // Start is called before the first frame update
