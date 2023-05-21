@@ -2342,8 +2342,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1059733131}
   - component: {fileID: 1059733130}
-  - component: {fileID: 1059733132}
   - component: {fileID: 1059733133}
+  - component: {fileID: 1059733134}
   m_Layer: 0
   m_Name: DragBackGround
   m_TagString: Untagged
@@ -2393,7 +2393,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 1}
+  m_Color: {r: 0.27450982, g: 0.37647063, b: 0.48627454, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -2418,18 +2418,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1059733132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1059733129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5df0fe3eda0c4ee4486653e3d19b3c25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &1059733133
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2456,6 +2444,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1059733134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059733129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fba77eafde5b8340a5bcd1b647b5dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NodeGroup: {fileID: 0}
 --- !u!1 &1155534279
 GameObject:
   m_ObjectHideFlags: 0
@@ -2843,6 +2844,7 @@ MonoBehaviour:
   DragNode: {fileID: 0}
   StartDrag: {fileID: 0}
   EndDrag: {fileID: 0}
+  Index: 0
   nodegroup: {fileID: 0}
   prefab: {fileID: 0}
   RootNode: {fileID: 0}
