@@ -29,42 +29,38 @@ public class AddNode : MonoBehaviour
                 id = IDIF.text;
                 name = NameIF.text;
 
-                // TODO : IF문 구조 수정
-                if (id[0].Equals("n") && id.Substring(1).All(char.IsDigit))//ID 확인
+                // 노드 ID 확인
+                if (id[0].Equals("n") && id.Substring(1).All(char.IsDigit) && EEM.Instance.TraversalKeyCheck(EEM.Instance.Root, id))
                 {
-                    // 노드 ID 중복 확인
-                    if (EEM.Instance.TraversalKeyCheck(EEM.Instance.Root, id) )
-                    {   // 노드 Name 중복 확인
-                        if (EEM.Instance.TraversalNameCheck(EEM.Instance.Root, name))
-                        {
-                            //노드 셋팅
-                            GameObject node = Instantiate(Resources.Load<GameObject>("Prefabs/EndingNode"));
-                            node.transform.parent = GameObject.Find("EndingNodeGroup").gameObject.transform;
-
-                            //노드 데이터 셋팅
-                            TestEndingData data = new TestEndingData();
-                            data.SetData(id, name, Vector3.zero, null);
-                            node.AddComponent<TestEndingNode>().data = data;
-
-                            EEM.Index++;
-
-                            //노드 추가 종료
-                            gameObject.SetActive(false);
-                        }
-                        else //이름 중복일 경우 이름 입력란에 포커스
-                        {
-                            NameIF.ActivateInputField();
-                        }
-                    }
-                    else //ID 중복일 경우 ID 입력란에 포커스
+                    // 노드 Name 확인
+                    if (EEM.Instance.TraversalNameCheck(EEM.Instance.Root, name))
                     {
-                        IDIF.ActivateInputField();
-                        IDIF.MoveTextEnd(false);
+                        //노드 셋팅
+                        GameObject node = Instantiate(Resources.Load<GameObject>("Prefabs/EndingNode"));
+                        node.transform.parent = GameObject.Find("EndingNodeGroup").gameObject.transform;
+
+                        //노드 데이터 셋팅
+                        TestEndingData data = new TestEndingData();
+                        data.SetData(id, name, Vector3.zero, null);
+                        node.AddComponent<TestEndingNode>().data = data;
+
+                        EEM.Index++;
+
+                        //노드 추가 종료
+                        gameObject.SetActive(false);
+                    }
+                    else //이름 중복일 경우 이름 입력란에 포커스
+                    {
+                        Debug.Log("Name 중복");
+                        NameIF.ActivateInputField();
+                        NameIF.MoveTextEnd(false);
                     }
                 }
-                else
+                else//ID 중복일 경우 ID 입력란에 포커스
                 {
-
+                    Debug.Log("ID 중복 or ID 형태 인식 불가");
+                    IDIF.ActivateInputField();
+                    IDIF.MoveTextEnd(false);
                 }
             }
         });

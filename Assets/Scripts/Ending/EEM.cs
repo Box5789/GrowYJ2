@@ -129,7 +129,7 @@ public class EEM : MonoBehaviour
         SaveBtn = GameObject.Find("Canvas").transform.Find("SaveBtn").gameObject.GetComponent<Button>();
         SaveBtn.onClick.AddListener(delegate
         {
-            var temp = Root;
+            TestEndingData temp = Root;
             save.SaveData(temp);
         });
     }
