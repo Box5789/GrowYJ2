@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     const string event_filepath = "/Resources/Data/Event.csv";
     const string road_filepath = "/Resources/Data/Road.csv";
     const string save_filename = "GameDataFile.json";
+    //const string endingnodeposition_filename = "EndingNodePosition.json";
 
 
     //DataSheet
