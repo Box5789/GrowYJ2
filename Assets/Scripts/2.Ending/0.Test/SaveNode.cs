@@ -7,8 +7,6 @@ using UnityEngine;
 public class SaveNode
 {
     private string SavePath = Application.persistentDataPath;
-    //private string SaveTestFileName = "EndingTestNodePosition.json";
-    //private string SavePositionFileName = "EndingNodePosition.json";
     private string SaveTestFileName = "EndingTestNodePosition.dat";
     private string SavePositionFileName = "EndingNodePosition.dat";
 
@@ -27,7 +25,7 @@ public class SaveNode
         }
     }
 
-    //CODE : modification required ( return data, parameter )
+    //CODE REVIEW : modification required ( return data, parameter )
     Dictionary<string, EndingPositionData> SetPositionData(Dictionary<string, EndingPositionData> dic, TestEndingData data)
     {
         if (data.GetID().Equals("n1"))
@@ -60,34 +58,4 @@ public class SaveNode
             return null;
         }
     }
-    /*
-    public void SaveData(TestEndingData testdata, Dictionary<string, Vector3[]> positiondata)
-    {
-        // Save Test Data
-        if (!Directory.Exists(SavePath))
-        {
-            Directory.CreateDirectory(SavePath);
-        }
-
-        File.WriteAllText(SavePath + SaveTestFileName, JsonUtility.ToJson(testdata));
-
-        // Save Position Data
-        File.WriteAllText(SavePath + SavePositionFileName, JsonUtility.ToJson(positiondata));
-    }
-
-    public TestEndingData LoadData()
-    {
-        if (!File.Exists(SavePath + SaveTestFileName))
-        {
-            Debug.Log("No such saveFile exists");
-            return null;
-        }
-        TestEndingData test = JsonUtility.FromJson<TestEndingData>(File.ReadAllText(SavePath + SaveTestFileName));
-        
-        if (test.GetName() == null)
-            return null;
-        else
-            return test;
-    }
-    */
 }
