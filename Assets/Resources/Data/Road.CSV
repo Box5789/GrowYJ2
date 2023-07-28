@@ -1,0 +1,16 @@
+ID/이름/다음노드/지식/체력/정신력/인기도/포인트/배경
+n1/길/n2//////Road
+n2/학교/n3,n4//////School
+n3/도서관/n5,n6,n7//////Library
+n4/강의실/n7,n8,n9//////ClassRoom
+n5/뇌진탕///<20///1/Concussion
+n6/카페/n7,n10//////Cafe
+n7/동아리/n4,n9/70<//30</10<//Club
+n8/대학원/n8,n14,n11,n12,n13//////GradSchool
+n9/축제/n4,n7,n15//////Festival
+n10/바리스타///50<//50</2/Barista
+n11/교수//80</20</80<//1/Professor
+n12/과로사///<20///1/Overwork
+n13/미치광이//90<//30<///MadScientist
+n14/군대/n15//////Military
+n15/직업군인//70</50</40</20</2/Soldier
